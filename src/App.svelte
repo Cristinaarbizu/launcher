@@ -6,34 +6,23 @@
   import Inventario from './routes/Inventario.svelte';
   import RRHH from './routes/RRHH.svelte';
   import Finanzas from './routes/Finanzas.svelte';
+  import Graficos from '../src/routes/Graficos.svelte';
   import Login from './components/Login.svelte';
 
   let currentRoute = 'home';
-  let isAuthenticated = false;
-  let user = null;
+  let isAuthenticated = true;
 
   let modules = [
     { name: 'Ventas', icon: '💼', route: 'ventas' },
     { name: 'Facturación', icon: '📄', route: 'facturacion' },
     { name: 'Inventario', icon: '📦', route: 'inventario' },
     { name: 'RRHH', icon: '👥', route: 'rrhh' },
-    { name: 'Finanzas', icon: '💰', route: 'finanzas' }
+    { name: 'Finanzas', icon: '💰', route: 'finanzas' },
+    { name: 'Gráficos', icon: '📊', route: 'graficos' }
   ];
 
   function navigate(route) {
     currentRoute = route;
-  }
-
-  function handleLogin(event) {
-    user = event.detail.username;
-    isAuthenticated = true;
-    currentRoute = 'home';
-  }
-
-  function handleLogout() {
-    user = null;
-    isAuthenticated = false;
-    currentRoute = 'home';
   }
 
   onMount(() => {
@@ -41,46 +30,36 @@
   });
 </script>
 
-<div class="app-container">
-  {#if isAuthenticated}
-    <Navigation {currentRoute} {navigate} {handleLogout} />
+<Navigation {currentRoute} {navigate} />
 
-    <main>
-      <h1>Launcher Empresarial</h1>
+<main>
+  <h1>Launcher Empresarial</h1>
 
-      {#if currentRoute === 'home'}
-        <div class="module-grid">
-          {#each modules as module, index}
-            <button class="module-icon" on:click={() => navigate(module.route)}>
-              <span class="icon">{module.icon}</span>
-              <span class="name">{module.name}</span>
-            </button>
-          {/each}
-        </div>
-      {:else if currentRoute === 'ventas'}
-        <Ventas />
-      {:else if currentRoute === 'facturacion'}
-        <Facturacion />
-      {:else if currentRoute === 'inventario'}
-        <Inventario />
-      {:else if currentRoute === 'rrhh'}
-        <RRHH />
-      {:else if currentRoute === 'finanzas'}
-        <Finanzas />
-      {/if}
-    </main>
-  {:else}
-    <Login on:login={handleLogin} />
+  {#if currentRoute === 'home'}
+    <div class="module-grid">
+      {#each modules as module, index}
+        <button class="module-icon" on:click={() => navigate(module.route)}>
+          <span class="icon">{module.icon}</span>
+          <span class="name">{module.name}</span>
+        </button>
+      {/each}
+    </div>
+  {:else if currentRoute === 'ventas'}
+    <Ventas />
+  {:else if currentRoute === 'facturacion'}
+    <Facturacion />
+  {:else if currentRoute === 'inventario'}
+    <Inventario />
+  {:else if currentRoute === 'rrhh'}
+    <RRHH />
+  {:else if currentRoute === 'finanzas'}
+    <Finanzas />
+  {:else if currentRoute === 'graficos'}
+    <Graficos moduleName="Ventas"/>
   {/if}
-</div>
+</main>
 
 <style>
-  .app-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
- 
-  }
 
   main {
     text-align: center;

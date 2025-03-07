@@ -8,7 +8,7 @@
     const dispatch = createEventDispatcher();
   
     function handleSubmit() {
-      if (username === 'admin' && password === 'password') {
+      if (username === 'admin' && password === 'admin') {
         dispatch('login', { username });
       } else {
         error = 'Usuario o contraseña incorrectos';
@@ -49,7 +49,7 @@
       width: 100%;
       padding: 1rem;
       box-sizing: border-box;
-      background: linear-gradient(to bottom, #ff3e00, #ff7f50); /* Fondo degradado */
+      background: linear-gradient(to bottom, #ff3e00, #ff7f50); 
     }
   
     /* Título principal */

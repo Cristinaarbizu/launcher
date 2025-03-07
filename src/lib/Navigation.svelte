@@ -1,7 +1,6 @@
 <script>
   export let currentRoute;
   export let navigate;
-  export let handleLogout;
 
   let routes = [
     { name: 'Inicio', route: 'home' },
@@ -9,7 +8,8 @@
     { name: 'Facturación', route: 'facturacion' },
     { name: 'Inventario', route: 'inventario' },
     { name: 'RRHH', route: 'rrhh' },
-    { name: 'Finanzas', route: 'finanzas' }
+    { name: 'Finanzas', route: 'finanzas' },
+    { name: 'Gráficos', route: 'graficos' }
   ];
 </script>
 
@@ -22,7 +22,6 @@
       {name}
     </button>
   {/each}
-  <button on:click={handleLogout}>Cerrar Sesión</button>
 </nav>
   
   <style>
