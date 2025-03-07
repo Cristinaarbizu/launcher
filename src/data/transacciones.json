@@ -1,0 +1,14 @@
+{
+    "transacciones": [
+        { "id": 1, "tipo": "Ingreso", "importe": 10000, "fecha": "2025-03-06", "categoria": "Ventas" },
+        { "id": 2, "tipo": "Gasto", "importe": 5000, "fecha": "2025-03-05", "categoria": "Gastos Generales" },
+        { "id": 3, "tipo": "Ingreso", "importe": 8000, "fecha": "2025-03-04", "categoria": "Servicios" },
+        { "id": 4, "tipo": "Gasto", "importe": 3000, "fecha": "2025-03-03", "categoria": "Materiales" },
+        { "id": 5, "tipo": "Ingreso", "importe": 12000, "fecha": "2025-03-02", "categoria": "Inversiones" },
+        { "id": 6, "tipo": "Gasto", "importe": 2000, "fecha": "2025-03-01", "categoria": "Marketing" },
+        { "id": 7, "tipo": "Ingreso", "importe": 15000, "fecha": "2025-02-28", "categoria": "Exportaciones" },
+        { "id": 8, "tipo": "Gasto", "importe": 5000, "fecha": "2025-02-27", "categoria": "Publicidad" },
+        { "id": 9, "tipo": "Ingreso", "importe": 7500, "fecha": "2025-02-26", "categoria": "Consultoría" },
+        { "id": 10, "tipo": "Gasto", "importe": 4000, "fecha": "2025-02-25", "categoria": "Viajes" }
+    ]
+}
