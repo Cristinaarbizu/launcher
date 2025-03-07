@@ -1,0 +1,14 @@
+{
+    "empleados": [
+        { "id": 1, "nombre": "Juan Pérez", "cargo": "Desarrollador", "departamento": "TI", "salario": 50000 },
+        { "id": 2, "nombre": "María García", "cargo": "Gerente de Ventas", "departamento": "Ventas", "salario": 65000 },
+        { "id": 3, "nombre": "Carlos López", "cargo": "Diseñador UX", "departamento": "Diseño", "salario": 55000 },
+        { "id": 4, "nombre": "Ana Martínez", "cargo": "Contadora", "departamento": "Finanzas", "salario": 60000 },
+        { "id": 5, "nombre": "Pedro Sánchez", "cargo": "Representante de Ventas", "departamento": "Ventas", "salario": 45000 },
+        { "id": 6, "nombre": "Laura Fernández", "cargo": "Analista de Datos", "departamento": "TI", "salario": 58000 },
+        { "id": 7, "nombre": "Sergio Rodríguez", "cargo": "Director de Marketing", "departamento": "Marketing", "salario": 70000 },
+        { "id": 8, "nombre": "Cristina Navarro", "cargo": "Ingeniera de Software", "departamento": "TI", "salario": 62000 },
+        { "id": 9, "nombre": "David Torres", "cargo": "Consultor Financiero", "departamento": "Finanzas", "salario": 67000 },
+        { "id": 10, "nombre": "Marta Ruiz", "cargo": "Especialista en RRHH", "departamento": "Recursos Humanos", "salario": 55000 }
+    ]
+}

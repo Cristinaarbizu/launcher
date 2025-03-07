@@ -1,0 +1,14 @@
+{
+    "ventas": [
+        { "id": 1, "cliente": "Cliente A", "ingresos": 1000, "fecha": "2025-03-06" },
+        { "id": 2, "cliente": "Cliente B", "ingresos": 1500, "fecha": "2025-03-05" },
+        { "id": 3, "cliente": "Cliente C", "ingresos": 2000, "fecha": "2025-03-04" },
+        { "id": 4, "cliente": "Cliente D", "ingresos": 2500, "fecha": "2025-03-03" },
+        { "id": 5, "cliente": "Cliente E", "ingresos": 3000, "fecha": "2025-03-02" },
+        { "id": 6, "cliente": "Cliente F", "ingresos": 3500, "fecha": "2025-03-01" },
+        { "id": 7, "cliente": "Cliente G", "ingresos": 4000, "fecha": "2025-02-28" },
+        { "id": 8, "cliente": "Cliente H", "ingresos": 4500, "fecha": "2025-02-27" },
+        { "id": 9, "cliente": "Cliente I", "ingresos": 5000, "fecha": "2025-02-26" },
+        { "id": 10, "cliente": "Cliente J", "ingresos": 5500, "fecha": "2025-02-25" }
+    ]
+}
