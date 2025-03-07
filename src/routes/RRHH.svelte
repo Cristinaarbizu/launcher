@@ -56,39 +56,15 @@
     }
   
     h2 {
-      color: #333;
       margin-bottom: 1rem;
     }
   
     .resumen {
-      background-color: #f0f0f0;
       padding: 1rem;
       margin-bottom: 1rem;
       border-radius: 4px;
     }
   
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-  
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-    }
-  
-    th {
-      background-color: #f2f2f2;
-      font-weight: bold;
-    }
-  
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-  
-    tr:hover {
-      background-color: #f5f5f5;
-    }
   </style>
+  
   
