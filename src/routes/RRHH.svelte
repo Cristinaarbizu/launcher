@@ -22,7 +22,7 @@
     <h2>Recursos Humanos</h2>
   
     <div class="resumen">
-      <p>Total de Salarios: ${totalSalarios.toLocaleString()}</p>
+      <p>Total de Salarios: ${totalSalarios.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
       <p>Número de Empleados: {empleados.length}</p>
     </div>
   
@@ -43,7 +43,7 @@
             <td>{empleado.nombre}</td>
             <td>{empleado.cargo}</td>
             <td>{empleado.departamento}</td>
-            <td>${empleado.salario.toLocaleString()}</td>
+            <td class="alinear-dcha">${(empleado.salario).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
           </tr>
         {/each}
       </tbody>
@@ -63,6 +63,10 @@
       padding: 1rem;
       margin-bottom: 1rem;
       border-radius: 4px;
+    }
+    
+    .alinear-dcha {
+        text-align: right;
     }
   
   </style>
