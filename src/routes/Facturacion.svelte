@@ -31,7 +31,7 @@
   <h2>Facturación</h2>
   
   <div class="resumen">
-    <p>Total Ventas: ${totalVentas.toLocaleString()}</p>
+    <p>Total Ventas: ${totalVentas.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
   </div>
   
   {#if facturas.length === 0}
@@ -52,7 +52,7 @@
           <tr>
             <td>{factura.id}</td>
             <td>{factura.cliente}</td>
-            <td>${factura.ingresos.toLocaleString()}</td>
+            <td class="alinear-dcha">${factura.ingresos.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
             <td>{factura.fecha}</td>
             <td class={getEstadoClass(factura.estado)}>{factura.estado}</td>
           </tr>
@@ -82,4 +82,9 @@
   .estado-vencida {
     font-weight: bold;
   }
+  
+  .alinear-dcha {
+      text-align: right;
+  }
+  
 </style>

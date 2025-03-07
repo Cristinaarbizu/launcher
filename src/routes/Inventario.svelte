@@ -22,7 +22,7 @@
   <h2>Inventario</h2>
 
   <div class="resumen">
-    <p>Valor Total del Inventario: ${totalInventario.toLocaleString()}</p>
+    <p>Valor Total del Inventario: ${totalInventario.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
   </div>
 
   <table>
@@ -41,10 +41,10 @@
         <tr>
           <td>{producto.id}</td>
           <td>{producto.nombre}</td>
-          <td>{producto.cantidad}</td>
-          <td>${producto.precio}</td>
+          <td class="alinear-dcha">{producto.cantidad}</td>
+          <td class="alinear-dcha">${(producto.precio).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
           <td>{producto.categoria}</td>
-          <td>${(producto.cantidad * producto.precio).toLocaleString()}</td>
+          <td class="alinear-dcha">${(producto.cantidad * producto.precio).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
         </tr>
       {/each}
     </tbody>
@@ -65,4 +65,9 @@
     margin-bottom: 1rem;
     border-radius: 4px;
   }
+
+  .alinear-dcha {
+      text-align: right;
+  }
+  
 </style>

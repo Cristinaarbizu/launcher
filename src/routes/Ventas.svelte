@@ -33,7 +33,7 @@
           <tr>
             <td>{venta.id}</td>
             <td>{venta.cliente}</td>
-            <td>${venta.ingresos}</td>
+            <td class="alinear-dcha">${(venta.ingresos).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
             <td>{venta.fecha}</td>
           </tr>
         {/each}
@@ -50,4 +50,9 @@
   h2 {
     margin-bottom: 1rem;
   }
+
+  .alinear-dcha {
+      text-align: right;
+  }
+
 </style>
