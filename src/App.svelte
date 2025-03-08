@@ -1,5 +1,4 @@
 <script>
-  // Importaciones necesarias
   import { onMount, afterUpdate } from "svelte";
   import Navigation from "./lib/Navigation.svelte";
   import Ventas from "./routes/Ventas.svelte";
@@ -12,15 +11,13 @@
   import { theme } from "./stores/theme";
   import DarkModeToggle from "./components/DarkModeToggle.svelte";
 
-  // Variables de estado
   let currentRoute = "home";
   let isAuthenticated = false;
-  let userRol = "";
+  let userRol = ""; // 'user' o 'admin'
   let username = "";
   let isDragging = false;
 
-  // Definición de todos los módulos disponibles
-  const allModules = [
+  let allModules = [
     { name: "Ventas", icon: "💼", route: "ventas" },
     { name: "Facturación", icon: "📄", route: "facturacion" },
     { name: "Inventario", icon: "📦", route: "inventario" },
@@ -29,15 +26,12 @@
     { name: "Gráficos", icon: "📊", route: "graficos", roles: ["admin"] },
   ];
 
-  // Array de módulos filtrados según el rol del usuario
   let modules = [];
 
-  // Función para navegar entre rutas
   function navigate(route) {
     if (!isDragging) currentRoute = route;
   }
 
-  // Función para manejar el cierre de sesión
   function handleLogout() {
     isAuthenticated = false;
     userRol = "";
@@ -46,7 +40,6 @@
     theme.set("light");
   }
 
-  // Función para manejar el inicio de sesión
   function handleLogin(event) {
     isAuthenticated = true;
     userRol = event.detail.rol;
@@ -55,31 +48,32 @@
     currentRoute = "home";
   }
 
-  // Función para actualizar los módulos según el rol del usuario
   function updateModules() {
     const savedOrder = localStorage.getItem("modulesOrder");
-    const filtered = allModules.filter(
-      (module) => !module.roles || module.roles.includes(userRol)
-    );
-
-    modules = savedOrder
-      ? JSON.parse(savedOrder)
-          .map((name) => filtered.find((m) => m.name === name))
-          .filter(Boolean)
-      : [...filtered];
+    const filtered = allModules.filter(module => !module.roles || module.roles.includes(userRol));
+    
+    if (savedOrder) {
+      const orderArray = JSON.parse(savedOrder);
+      modules = orderArray
+        .map(name => filtered.find(m => m.name === name))
+        .filter(Boolean);
+      
+      filtered.forEach(module => {
+        if (!modules.some(m => m.name === module.name)) {
+          modules.push(module);
+        }
+      });
+    } else {
+      modules = [...filtered];
+    }
   }
 
-  // Función para guardar el orden de los módulos en localStorage
   function saveModulesOrder() {
-    localStorage.setItem(
-      "modulesOrder",
-      JSON.stringify(modules.map((m) => m.name))
-    );
+    localStorage.setItem("modulesOrder", JSON.stringify(modules.map(m => m.name)));
   }
 
   let draggedItem;
 
-  // Funciones para manejar el arrastre y soltar de los módulos
   function handleDragStart(event, module) {
     isDragging = true;
     draggedItem = module;
@@ -111,8 +105,8 @@
     event.target.style.opacity = "1";
   }
 
-  // Función que se ejecuta al montar el componente
   onMount(() => {
+    console.log("App cargada");
     theme.subscribe((value) => {
       document.body.className = value;
     });
@@ -127,6 +121,7 @@
 
     <main>
       <DarkModeToggle />
+
       <h1>Launcher Empresarial</h1>
 
       {#if currentRoute === "home"}
@@ -167,96 +162,88 @@
 
 <style>
   :global(body) {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-}
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
 
-.light {
-  background-color: #ffffff;
-  color: #333333;
-}
+  .light {
+    background-color: #ffffff;
+    color: #333333;
+  }
 
-.dark {
-  background-color: #333333;
-  color: #ffffff;
-}
+  .dark {
+    background-color: #333333;
+    color: #ffffff;
+  }
 
-main {
-  text-align: center;
-  padding: 1em;
-  max-width: 800px;
-  margin: 0 auto;
-  flex: 1;
-}
+  main {
+    text-align: center;
+    padding: 1em;
+    max-width: 800px;
+    margin: 0 auto;
+    flex: 1;
+  }
 
-h1 {
-  color: #ff3e00;
-  text-transform: uppercase;
-  font-size: 4em;
-  font-weight: 100;
-  margin-bottom: 2rem;
-}
+  h1 {
+    color: #ff3e00;
+    text-transform: uppercase;
+    font-size: 4em;
+    font-weight: 100;
+    margin-bottom: 2rem;
+  }
 
-.module-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(150px, 1fr));
-  gap: 1rem;
-  margin-top: 2rem;
-  position: relative;
-}
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
 
-.module-icon {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: grab;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-radius: 8px;
-  padding: 1rem;
-  border: none;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
-  font-size: inherit;
-}
+  .module-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: grab;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 8px;
+    padding: 1rem;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+    font-size: inherit;
+  }
 
-.module-icon:active {
-  cursor: grabbing;
-}
+  .light .module-icon {
+    background-color: #f9f9f9;
+    color: #333333;
+  }
 
-.light .module-icon {
-  background-color: #f9f9f9;
-  color: #333333;
-}
+  .dark .module-icon {
+    background-color: #4a4a4a;
+    color: #ffffff;
+  }
 
-.dark .module-icon {
-  background-color: #4a4a4a;
-  color: #ffffff;
-}
+  .module-icon:hover {
+    transform: scale(1.05);
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 8px;
+  }
 
-.module-icon:hover {
-  transform: scale(1.05);
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 8px;
-}
+  .icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    transition: transform 0.3s ease;
+  }
 
-.icon {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
-  transition: transform 0.3s ease;
-}
+  .module-icon:hover .icon {
+    transform: scale(1.2);
+  }
 
-.module-icon:hover .icon {
-  transform: scale(1.2);
-}
+  .name {
+    font-size: 0.9rem;
+    text-transform: capitalize;
+  }
 
-.name {
-  font-size: 0.9rem;
-  text-transform: capitalize;
-}
-
-.module-icon.dragging {
-  opacity: 0.7;
-  cursor: grabbing !important;
-  z-index: 1000;
-}
-
+  .module-icon:active {
+    cursor: grabbing;
+  }
 </style>
