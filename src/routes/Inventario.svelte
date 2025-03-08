@@ -4,6 +4,22 @@
   let productos = [];
   let totalInventario = 0;
 
+  onMount(async () => {
+  try {
+    const response = await fetch('/src/data/productos.json');
+    if (!response.ok) {
+      throw new Error('Error al cargar los productos');
+    }
+    const data = await response.json(); // Obtener el JSON
+    productos = data.productos; // Acceder al array dentro del JSON
+
+    totalInventario = productos.reduce((total, producto) => total + (producto.cantidad * producto.precio), 0);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+  /*
   onMount(() => {
     // Simulación de carga de datos
     productos = [
@@ -16,13 +32,15 @@
 
     totalInventario = productos.reduce((total, producto) => total + (producto.cantidad * producto.precio), 0);
   });
+  */
+
 </script>
 
 <div class="inventario-container">
   <h2>Inventario</h2>
 
   <div class="resumen">
-    <p>Valor Total del Inventario: ${totalInventario.toLocaleString()}</p>
+    <p>Valor Total del Inventario: ${totalInventario.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
   </div>
 
   <table>
@@ -41,10 +59,10 @@
         <tr>
           <td>{producto.id}</td>
           <td>{producto.nombre}</td>
-          <td>{producto.cantidad}</td>
-          <td>${producto.precio}</td>
+          <td class="alinear-dcha">{producto.cantidad}</td>
+          <td class="alinear-dcha">${(producto.precio).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
           <td>{producto.categoria}</td>
-          <td>${(producto.cantidad * producto.precio).toLocaleString()}</td>
+          <td class="alinear-dcha">${(producto.cantidad * producto.precio).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
         </tr>
       {/each}
     </tbody>
@@ -65,4 +83,9 @@
     margin-bottom: 1rem;
     border-radius: 4px;
   }
+
+  .alinear-dcha {
+      text-align: right;
+  }
+  
 </style>

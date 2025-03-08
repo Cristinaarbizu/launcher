@@ -3,7 +3,23 @@
   
     let empleados = [];
     let totalSalarios = 0;
+
+    onMount(async () => {
+      try {
+        const response = await fetch('/src/data/empleados.json'); 
+        if (!response.ok) {
+          throw new Error('Error al cargar los empleados');
+        }
+        const data = await response.json(); // Obtener el JSON
+        empleados = data.empleados; // Acceder al array dentro del JSON
+
+        totalSalarios = empleados.reduce((total, empleado) => total + empleado.salario, 0);
+      } catch (error) {
+        console.error(error);
+      }
+    });
   
+    /*
     onMount(() => {
       // Simulación de carga de datos
       empleados = [
@@ -16,13 +32,15 @@
   
       totalSalarios = empleados.reduce((total, empleado) => total + empleado.salario, 0);
     });
+    */
+
   </script>
   
   <div class="rrhh-container">
     <h2>Recursos Humanos</h2>
   
     <div class="resumen">
-      <p>Total de Salarios: ${totalSalarios.toLocaleString()}</p>
+      <p>Total de Salarios: ${totalSalarios.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
       <p>Número de Empleados: {empleados.length}</p>
     </div>
   
@@ -43,7 +61,7 @@
             <td>{empleado.nombre}</td>
             <td>{empleado.cargo}</td>
             <td>{empleado.departamento}</td>
-            <td>${empleado.salario.toLocaleString()}</td>
+            <td class="alinear-dcha">${(empleado.salario).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
           </tr>
         {/each}
       </tbody>
@@ -63,6 +81,10 @@
       padding: 1rem;
       margin-bottom: 1rem;
       border-radius: 4px;
+    }
+    
+    .alinear-dcha {
+        text-align: right;
     }
   
   </style>

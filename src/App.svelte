@@ -13,15 +13,19 @@
 
   let currentRoute = "home";
   let isAuthenticated = false;
+  let userRol = ""; // 'user' o 'admin'
+  let username = "";
 
-  let modules = [
+  let allModules = [
     { name: "Ventas", icon: "💼", route: "ventas" },
     { name: "Facturación", icon: "📄", route: "facturacion" },
     { name: "Inventario", icon: "📦", route: "inventario" },
-    { name: "RRHH", icon: "👥", route: "rrhh" },
-    { name: "Finanzas", icon: "💰", route: "finanzas" },
-    { name: "Gráficos", icon: "📊", route: "graficos" },
+    { name: "RRHH", icon: "👥", route: "rrhh", roles: ["admin"] },
+    { name: "Finanzas", icon: "💰", route: "finanzas", roles: ["admin"] },
+    { name: "Gráficos", icon: "📊", route: "graficos", roles: ["admin"] },
   ];
+
+  let modules = [];
 
   function navigate(route) {
     currentRoute = route;
@@ -29,12 +33,22 @@
 
   function handleLogout() {
     isAuthenticated = false;
+    userRol = "";
+    username = "";
     currentRoute = "home";
+    theme.set("light"); // Establecer el tema a "light" (modo día) al cerrar sesión
   }
 
   function handleLogin(event) {
     isAuthenticated = true;
+    userRol = event.detail.rol; // Se asume que el evento de login envía un objeto { rol: "user" o "admin" }
+    username = event.detail.username; // Asignar el username del evento de login
+    updateModules();
     currentRoute = "home";
+  }
+
+  function updateModules() {
+    modules = allModules.filter(module => !module.roles || module.roles.includes(userRol));
   }
 
   onMount(() => {
@@ -47,16 +61,16 @@
 
 <div class={$theme}>
   {#if isAuthenticated}
-    <Navigation {currentRoute} {navigate} {handleLogout} />
+    <Navigation {currentRoute} {navigate} {handleLogout} {userRol} {username} />
 
     <main>
       <DarkModeToggle />
-      
+
       <h1>Launcher Empresarial</h1>
 
       {#if currentRoute === "home"}
         <div class="module-grid">
-          {#each modules as module, index}
+          {#each modules as module}
             <button class="module-icon" on:click={() => navigate(module.route)}>
               <span class="icon">{module.icon}</span>
               <span class="name">{module.name}</span>
@@ -69,11 +83,11 @@
         <Facturacion />
       {:else if currentRoute === "inventario"}
         <Inventario />
-      {:else if currentRoute === "rrhh"}
+      {:else if currentRoute === "rrhh" && userRol === "admin"}
         <RRHH />
-      {:else if currentRoute === "finanzas"}
+      {:else if currentRoute === "finanzas" && userRol === "admin"}
         <Finanzas />
-      {:else if currentRoute === "graficos"}
+      {:else if currentRoute === "graficos" && userRol === "admin"}
         <Graficos moduleName="Ventas" />
       {/if}
     </main>

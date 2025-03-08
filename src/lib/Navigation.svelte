@@ -3,21 +3,28 @@
   export let currentRoute;
   export let navigate;
   export let handleLogout;
+  export let userRol; // Recibido desde App.svelte
+  export let username; // Recibido desde App.svelte
 
   let routes = [
     { name: 'Inicio', route: 'home' },
     { name: 'Ventas', route: 'ventas' },
     { name: 'Facturación', route: 'facturacion' },
     { name: 'Inventario', route: 'inventario' },
-    { name: 'RRHH', route: 'rrhh' },
-    { name: 'Finanzas', route: 'finanzas' },
-    { name: 'Gráficos', route: 'graficos' }
+    { name: 'RRHH', route: 'rrhh', roles: ['admin'] }, // Solo visible para admin
+    { name: 'Finanzas', route: 'finanzas', roles: ['admin']  }, // Solo visible para admin
+    { name: 'Gráficos', route: 'graficos', roles: ['admin'] } // Solo visible para admin
   ];
+
+    // Filtrar las rutas disponibles en función del rol
+    let filteredRoutes = routes.filter(route => !route.roles || 
+      route.roles.includes(userRol));
+
 </script>
 
 <nav class={$theme}>
   <div class="nav-buttons">
-    {#each routes as { name, route }}
+    {#each filteredRoutes as { name, route }}
       <button
         class:active={currentRoute === route}
         on:click={() => navigate(route)}
@@ -26,7 +33,10 @@
       </button>
     {/each}
   </div>
-  <button on:click={handleLogout} class="logout-button">Cerrar Sesión</button>
+  <div class="user-info">
+    <span>Hola, {username}</span>
+    <button on:click={handleLogout} class="logout-button">Cerrar Sesión</button>
+  </div>
 </nav>
   
 <style>
@@ -59,14 +69,16 @@
 
   .light button:hover {
     background-color: #e0e0e0;
+    transform: scale(1.05);
   }
 
   .dark button:hover {
     background-color: #3a3a3a;
+    transform: scale(1.05);
   }
 
   .active {
-    background-color: #ff3e00;
+    background-color: #1a13e7;
     color: white;
   }
 

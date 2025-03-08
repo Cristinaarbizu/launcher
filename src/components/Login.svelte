@@ -1,20 +1,44 @@
 <script>
-    import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
+
+  let username = '';
+  let password = '';
+  let error = '';
+  let usuarios = [];
+
+  const dispatch = createEventDispatcher();
   
-    let username = '';
-    let password = '';
-    let error = '';
-  
-    const dispatch = createEventDispatcher();
-  
-    function handleSubmit() {
-      if (username === 'admin' && password === 'admin') {
-        dispatch('login', { username });
-      } else {
-        error = 'Usuario o contraseña incorrectos';
+
+  // Cargar la lista de usuarios desde usuarios.json
+  async function cargarUsuarios() {
+      try {
+        const response = await fetch('/src/data/usuarios.json');
+        const data = await response.json();
+        usuarios = data.usuarios;
+      } catch (err) {
+          console.error("Error cargando usuarios.json:", err);
+          error = "Error al cargar los usuarios";
       }
+  }
+
+  onMount(() => {
+      cargarUsuarios();
+  });
+
+  function handleSubmit() {
+    if (usuarios.length === 0) {
+        error = 'Usuarios no cargados correctamente';
+        return;
     }
-  </script>
+    
+    const usuarioEncontrado = usuarios.find(user => user.username === username && user.password === password);
+    if (usuarioEncontrado) {
+        dispatch('login', { username, rol: usuarioEncontrado.rol });
+    } else {
+        error = 'Usuario o contraseña incorrectos';
+    }
+  }
+</script>
   
   <div class="login-container">
     <h1>Launcher Empresarial</h1>
