@@ -4,6 +4,20 @@
   let ventas = [];
 
   onMount(async () => {
+  try {
+    const response = await fetch('/src/data/ventas.json'); 
+    if (!response.ok) {
+      throw new Error('Error al cargar las ventas');
+    }
+    const data = await response.json(); // Obtener el JSON
+    ventas = data.ventas; // Acceder al array dentro del JSON
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+  /*
+  onMount(async () => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     ventas = [
       { id: 1, cliente: 'Cliente A', ingresos: 1000, fecha: '2025-03-06' },
@@ -11,6 +25,8 @@
       { id: 3, cliente: 'Cliente C', ingresos: 2000, fecha: '2025-03-04' },
     ];
   });
+  */
+
 </script>
 
 <div class="ventas-container">

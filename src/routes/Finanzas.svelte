@@ -5,6 +5,28 @@
   let totalIngresos = 0;
   let totalGastos = 0;
 
+  onMount(async () => {
+  try {
+    const response = await fetch('/src/data/transacciones.json'); // Asegúrate de que la ruta sea correcta
+    if (!response.ok) {
+      throw new Error('Error al cargar las transacciones');
+    }
+    const data = await response.json(); // Obtener el objeto JSON
+    transacciones = data.transacciones; // Acceder al array dentro del JSON
+
+    totalIngresos = transacciones
+      .filter(t => t.tipo === 'Ingreso')
+      .reduce((total, t) => total + t.importe, 0);
+      
+    totalGastos = transacciones
+      .filter(t => t.tipo === 'Gasto')
+      .reduce((total, t) => total + t.importe, 0);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+  /*
   onMount(() => {
     transacciones = [
       { id: 1, tipo: 'Ingreso', importe: 10000, fecha: '2025-03-06', categoria: 'Ventas' },
@@ -17,6 +39,7 @@
     totalIngresos = transacciones.filter(t => t.tipo === 'Ingreso').reduce((total, t) => total + t.importe, 0);
     totalGastos = transacciones.filter(t => t.tipo === 'Gasto').reduce((total, t) => total + t.importe, 0);
   });
+  */
 
   function getColor(tipo) {
     return tipo === 'Ingreso' ? 'var(--ingreso-color)' : 'var(--gasto-color)';

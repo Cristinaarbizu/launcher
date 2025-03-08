@@ -4,6 +4,22 @@
   let productos = [];
   let totalInventario = 0;
 
+  onMount(async () => {
+  try {
+    const response = await fetch('/src/data/productos.json');
+    if (!response.ok) {
+      throw new Error('Error al cargar los productos');
+    }
+    const data = await response.json(); // Obtener el JSON
+    productos = data.productos; // Acceder al array dentro del JSON
+
+    totalInventario = productos.reduce((total, producto) => total + (producto.cantidad * producto.precio), 0);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+  /*
   onMount(() => {
     // Simulación de carga de datos
     productos = [
@@ -16,6 +32,8 @@
 
     totalInventario = productos.reduce((total, producto) => total + (producto.cantidad * producto.precio), 0);
   });
+  */
+
 </script>
 
 <div class="inventario-container">

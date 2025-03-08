@@ -59,14 +59,16 @@
 
   .light button:hover {
     background-color: #e0e0e0;
+    transform: scale(1.05);
   }
 
   .dark button:hover {
     background-color: #3a3a3a;
+    transform: scale(1.05);
   }
 
   .active {
-    background-color: #5f36f4;
+    background-color: #1a13e7;
     color: white;
   }
 
