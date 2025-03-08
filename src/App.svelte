@@ -1,6 +1,6 @@
 <script>
+  import { onMount, afterUpdate } from "svelte";
   import Navigation from "./lib/Navigation.svelte";
-  import { onMount } from "svelte";
   import Ventas from "./routes/Ventas.svelte";
   import Facturacion from "./routes/Facturacion.svelte";
   import Inventario from "./routes/Inventario.svelte";
@@ -15,6 +15,7 @@
   let isAuthenticated = false;
   let userRol = ""; // 'user' o 'admin'
   let username = "";
+  let isDragging = false;
 
   let allModules = [
     { name: "Ventas", icon: "💼", route: "ventas" },
@@ -28,7 +29,7 @@
   let modules = [];
 
   function navigate(route) {
-    currentRoute = route;
+    if (!isDragging) currentRoute = route;
   }
 
   function handleLogout() {
@@ -36,19 +37,72 @@
     userRol = "";
     username = "";
     currentRoute = "home";
-    theme.set("light"); // Establecer el tema a "light" (modo día) al cerrar sesión
+    theme.set("light");
   }
 
   function handleLogin(event) {
     isAuthenticated = true;
-    userRol = event.detail.rol; // Se asume que el evento de login envía un objeto { rol: "user" o "admin" }
-    username = event.detail.username; // Asignar el username del evento de login
+    userRol = event.detail.rol;
+    username = event.detail.username;
     updateModules();
     currentRoute = "home";
   }
 
   function updateModules() {
-    modules = allModules.filter(module => !module.roles || module.roles.includes(userRol));
+    const savedOrder = localStorage.getItem("modulesOrder");
+    const filtered = allModules.filter(module => !module.roles || module.roles.includes(userRol));
+    
+    if (savedOrder) {
+      const orderArray = JSON.parse(savedOrder);
+      modules = orderArray
+        .map(name => filtered.find(m => m.name === name))
+        .filter(Boolean);
+      
+      filtered.forEach(module => {
+        if (!modules.some(m => m.name === module.name)) {
+          modules.push(module);
+        }
+      });
+    } else {
+      modules = [...filtered];
+    }
+  }
+
+  function saveModulesOrder() {
+    localStorage.setItem("modulesOrder", JSON.stringify(modules.map(m => m.name)));
+  }
+
+  let draggedItem;
+
+  function handleDragStart(event, module) {
+    isDragging = true;
+    draggedItem = module;
+    event.dataTransfer.effectAllowed = "move";
+    event.target.style.opacity = "0.5";
+  }
+
+  function handleDragOver(event, index) {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }
+
+  function handleDrop(event, targetIndex) {
+    event.preventDefault();
+    if (draggedItem) {
+      const currentIndex = modules.findIndex(m => m.name === draggedItem.name);
+      if (currentIndex !== targetIndex) {
+        modules = modules.filter(m => m !== draggedItem);
+        modules.splice(targetIndex, 0, draggedItem);
+        modules = [...modules];
+        saveModulesOrder();
+      }
+    }
+    isDragging = false;
+  }
+
+  function handleDragEnd(event) {
+    isDragging = false;
+    event.target.style.opacity = "1";
   }
 
   onMount(() => {
@@ -56,6 +110,8 @@
     theme.subscribe((value) => {
       document.body.className = value;
     });
+
+    updateModules();
   });
 </script>
 
@@ -70,8 +126,16 @@
 
       {#if currentRoute === "home"}
         <div class="module-grid">
-          {#each modules as module}
-            <button class="module-icon" on:click={() => navigate(module.route)}>
+          {#each modules as module, index (module.name)}
+            <button
+              class="module-icon"
+              draggable="true"
+              on:click={() => navigate(module.route)}
+              on:dragstart={(e) => handleDragStart(e, module)}
+              on:dragover={(e) => handleDragOver(e, index)}
+              on:drop={(e) => handleDrop(e, index)}
+              on:dragend={handleDragEnd}
+            >
               <span class="icon">{module.icon}</span>
               <span class="name">{module.name}</span>
             </button>
@@ -140,7 +204,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    cursor: pointer;
+    cursor: grab;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-radius: 8px;
     padding: 1rem;
@@ -177,5 +241,9 @@
   .name {
     font-size: 0.9rem;
     text-transform: capitalize;
+  }
+
+  .module-icon:active {
+    cursor: grabbing;
   }
 </style>
