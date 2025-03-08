@@ -5,6 +5,21 @@
   let totalVentas = 0;
   
   onMount(async () => {
+  try {
+    const response = await fetch('/src/data/facturas.json');
+    if (!response.ok) {
+      throw new Error('Error al cargar las facturas');
+    }
+    const data = await response.json(); // Obtener el objeto completo
+    facturas = data.facturas; // Acceder al array dentro del JSON
+    totalVentas = facturas.reduce((total, factura) => total + factura.ingresos, 0);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+  /*
+  onMount(async () => {
     // Simular una carga de datos
     await new Promise(resolve => setTimeout(resolve, 1000));
     facturas = [
@@ -16,6 +31,7 @@
     
     totalVentas = facturas.reduce((total, factura) => total + factura.ingresos, 0);
   });
+  */
 
   function getEstadoClass(estado) {
     switch(estado) {
