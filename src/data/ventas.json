@@ -1,14 +1,20 @@
 {
     "ventas": [
-        { "id": 1, "cliente": "Cliente A", "ingresos": 1000, "fecha": "2025-03-06" },
+        { "id": 1, "cliente": "Cliente A", "ingresos": 4000, "fecha": "2025-03-06" },
         { "id": 2, "cliente": "Cliente B", "ingresos": 1500, "fecha": "2025-03-05" },
-        { "id": 3, "cliente": "Cliente C", "ingresos": 2000, "fecha": "2025-03-04" },
-        { "id": 4, "cliente": "Cliente D", "ingresos": 2500, "fecha": "2025-03-03" },
-        { "id": 5, "cliente": "Cliente E", "ingresos": 3000, "fecha": "2025-03-02" },
+        { "id": 3, "cliente": "Cliente C", "ingresos": 3000, "fecha": "2025-03-04" },
+        { "id": 4, "cliente": "Cliente A", "ingresos": 2500, "fecha": "2025-01-03" },
+        { "id": 5, "cliente": "Cliente E", "ingresos": 2200, "fecha": "2025-03-02" },
         { "id": 6, "cliente": "Cliente F", "ingresos": 3500, "fecha": "2025-03-01" },
-        { "id": 7, "cliente": "Cliente G", "ingresos": 4000, "fecha": "2025-02-28" },
-        { "id": 8, "cliente": "Cliente H", "ingresos": 4500, "fecha": "2025-02-27" },
-        { "id": 9, "cliente": "Cliente I", "ingresos": 5000, "fecha": "2025-02-26" },
-        { "id": 10, "cliente": "Cliente J", "ingresos": 5500, "fecha": "2025-02-25" }
+        { "id": 7, "cliente": "Cliente A", "ingresos": 4000, "fecha": "2025-02-28" },
+        { "id": 8, "cliente": "Cliente D", "ingresos": 4500, "fecha": "2025-02-27" },
+        { "id": 9, "cliente": "Cliente C", "ingresos": 5000, "fecha": "2025-01-26" },
+        { "id": 10, "cliente": "Cliente C", "ingresos": 1500, "fecha": "2025-02-25" },
+        { "id": 11, "cliente": "Cliente G", "ingresos": 6000, "fecha": "2025-01-15" },
+        { "id": 12, "cliente": "Cliente H", "ingresos": 2200, "fecha": "2025-04-10" },
+        { "id": 13, "cliente": "Cliente I", "ingresos": 5800, "fecha": "2025-06-05" },
+        { "id": 14, "cliente": "Cliente J", "ingresos": 6100, "fecha": "2025-04-20" },
+        { "id": 15, "cliente": "Cliente K", "ingresos": 400, "fecha": "2025-06-18" },
+        { "id": 16, "cliente": "Cliente L", "ingresos": 5600, "fecha": "2025-05-25" }
     ]
 }

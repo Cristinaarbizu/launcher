@@ -1,7 +1,8 @@
-<!-- src/routes/Graficos.svelte -->
 <script>
   import { onMount } from 'svelte';
   import * as d3 from 'd3';
+  import productosData from '../data/productos.json';
+  import ventasData from '../data/ventas.json';
 
   let currentModule = null;
   let chartData = [];
@@ -9,25 +10,52 @@
   let categoryData = [];
   let categorySvgElement;
 
+  let pieSvgElement;
+  let pieChartData = [];
+
+  function processProductData() {
+    const categoryCount = {};
+    productosData.productos.forEach(p => {
+      categoryCount[p.categoria] = (categoryCount[p.categoria] || 0) + p.cantidad;
+    });
+
+    pieChartData = Object.entries(categoryCount).map(([categoria, cantidad]) => ({
+      categoria,
+      cantidad
+    }));
+  }
+
   export let moduleName;
 
   onMount(async () => {
     currentModule = moduleName;
-    await fetchChartData(moduleName);
+  await fetchChartData();
     await fetchTransactionData();
+    processProductData();
+    createPieChart();
   });
 
-  async function fetchChartData(module) {
-    // Simulación de datos para la gráfica
-    chartData = [
-      { mes: 'Enero', valor: Math.floor(Math.random() * 100) },
-      { mes: 'Febrero', valor: Math.floor(Math.random() * 100) },
-      { mes: 'Marzo', valor: Math.floor(Math.random() * 100) },
-      { mes: 'Abril', valor: Math.floor(Math.random() * 100) },
-      { mes: 'Mayo', valor: Math.floor(Math.random() * 100) }
-    ];
-    createChart();
-  }
+async function fetchChartData() {
+  const salesByMonth = {
+    'Enero': 0, 'Febrero': 0, 'Marzo': 0, 'Abril': 0, 'Mayo': 0, 'Junio': 0
+  };
+
+  const monthMap = {
+    "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril", "05": "Mayo", "06": "Junio"
+  };
+
+  ventasData.ventas.forEach(venta => {
+    const [year, month, day] = venta.fecha.split("-");
+    const monthName = monthMap[month] || "Desconocido";
+
+    if (salesByMonth[monthName] !== undefined) {
+      salesByMonth[monthName] += venta.ingresos;
+    }
+  });
+
+  chartData = Object.entries(salesByMonth).map(([mes, valor]) => ({ mes, valor }));
+  createChart();
+}
 
   async function fetchTransactionData() {
     try {
@@ -64,17 +92,30 @@
     const height = 400;
     const margin = { top: 20, right: 20, bottom: 30, left: 40 };
 
-    // Limpiar SVG existente
     svg.selectAll("*").remove();
+
+    const orderedMonths = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio"];
+    chartData.sort((a, b) => orderedMonths.indexOf(a.mes) - orderedMonths.indexOf(b.mes));
 
     const x = d3.scaleBand()
       .range([margin.left, width - margin.right])
-      .domain(chartData.map(d => d.mes))
+      .domain(orderedMonths)
       .padding(0.1);
 
-    const y = d3.scaleLinear()
-      .range([height - margin.bottom, margin.top])
-      .domain([0, d3.max(chartData, d => d.valor)]);
+    const maxY = d3.max(chartData, d => d.valor) || 1;
+      const y = d3.scaleLinear()
+        .range([height - margin.bottom, margin.top])
+        .domain([0, maxY * 1.13]);
+
+    const tooltip = d3.select(".graphics-container")
+      .append("div")
+      .style("position", "absolute")
+      .style("background", "white")
+      .style("padding", "5px")
+      .style("border", "1px solid #aaa") // Borde gris para mejorar visibilidad
+      .style("border-radius", "5px")
+      .style("color", "black") // Asegurar que el texto sea negro
+      .style("visibility", "hidden");
 
     svg.selectAll("rect")
       .data(chartData)
@@ -85,8 +126,22 @@
       .attr("width", x.bandwidth())
       .attr("height", d => height - margin.bottom - y(d.valor))
       .attr("fill", "steelblue")
-      .on("mouseover", handleMouseOver)
-      .on("mouseout", handleMouseOut);
+      .attr("data-original-color", "steelblue") // Guardar color original
+      .on("mouseover", (event, d) => {
+        d3.select(event.target)
+          .attr("fill", "orange"); // Cambiar color al pasar el mouse
+        tooltip.style("visibility", "visible")
+          .text(`Valor: ${d.valor}`);
+      })
+      .on("mousemove", (event) => {
+        tooltip.style("top", `${event.pageY - 10}px`)
+          .style("left", `${event.pageX + 10}px`);
+      })
+      .on("mouseout", (event) => {
+        d3.select(event.target)
+          .attr("fill", d3.select(event.target).attr("data-original-color")); // Restaurar color original
+        tooltip.style("visibility", "hidden");
+      });
 
     svg.append("g")
       .attr("transform", `translate(0,${height - margin.bottom})`)
@@ -97,7 +152,6 @@
       .call(d3.axisLeft(y));
   }
 
-  // Grafica de transacciones por categoria, ventas y gastos
   function createCategoryChart() {
     const svg = d3.select(categorySvgElement);
     const width = 600;
@@ -111,20 +165,21 @@
       .domain(categoryData.map(d => d.categoria))
       .padding(0.2);
 
-    const y = d3.scaleLinear()
-      .range([height - margin.bottom, margin.top])
-      .domain([0, d3.max(categoryData, d => Math.max(d.ingreso, d.gasto))]);
+    const maxYCategory = d3.max(categoryData, d => Math.max(d.ingreso, d.gasto)) || 1;
+      const y = d3.scaleLinear()
+        .range([height - margin.bottom, margin.top])
+        .domain([0, maxYCategory * 1.1]); // Aumenta el máximo un 10% para evitar cortes
 
     svg.append("g")
       .attr("transform", `translate(0,${height - margin.bottom})`)
       .call(d3.axisBottom(x))
       .selectAll("text")
-      .attr("text-anchor", "middle") // Asegurar que el texto quede centrado
-      .attr("dy", "0.5em") // Mover un poco hacia abajo
+      .attr("text-anchor", "middle")
+      .attr("dy", "0.5em")
       .each(function(d) {
         const text = d3.select(this);
         const words = d.split(" ");
-        text.text(null); // Vaciar el texto original
+        text.text(null);
         words.forEach((word, i) => {
           text.append("tspan")
             .attr("x", 0)
@@ -139,6 +194,16 @@
 
     const barWidth = x.bandwidth() / 2;
 
+    const categoryTooltip = d3.select(".graphics-container")
+      .append("div")
+      .style("position", "absolute")
+      .style("background", "white")
+      .style("padding", "5px")
+      .style("border", "1px solid #aaa") // Borde gris para mejorar visibilidad
+      .style("border-radius", "5px")
+      .style("color", "black") // Asegurar que el texto sea negro
+      .style("visibility", "hidden");
+
     svg.selectAll(".bar-ingreso")
       .data(categoryData)
       .enter()
@@ -148,7 +213,22 @@
       .attr("y", d => y(d.ingreso))
       .attr("width", barWidth)
       .attr("height", d => height - margin.bottom - y(d.ingreso))
-      .attr("fill", "green");
+      .attr("fill", "green")
+      .attr("data-original-color", "green")
+      .on("mouseover", (event, d) => {
+        d3.select(event.target).attr("fill", "limegreen"); // Cambio de color al pasar el mouse
+        categoryTooltip.style("visibility", "visible")
+          .text(`Ingreso: ${d.ingreso}€`);
+      })
+      .on("mousemove", (event) => {
+        categoryTooltip.style("top", `${event.pageY - 10}px`)
+          .style("left", `${event.pageX + 10}px`);
+      })
+      .on("mouseout", (event) => {
+        d3.select(event.target)
+          .attr("fill", d3.select(event.target).attr("data-original-color")); // Restaurar color
+        categoryTooltip.style("visibility", "hidden");
+      });
 
     svg.selectAll(".bar-gasto")
       .data(categoryData)
@@ -159,26 +239,81 @@
       .attr("y", d => y(d.gasto))
       .attr("width", barWidth)
       .attr("height", d => height - margin.bottom - y(d.gasto))
-      .attr("fill", "red");
+      .attr("fill", "red")
+      .attr("data-original-color", "red")
+      .on("mouseover", (event, d) => {
+        d3.select(event.target).attr("fill", "darkred"); // Cambio de color al pasar el mouse
+        categoryTooltip.style("visibility", "visible")
+          .text(`Gasto: ${d.gasto}€`);
+      })
+      .on("mousemove", (event) => {
+        categoryTooltip.style("top", `${event.pageY - 10}px`)
+          .style("left", `${event.pageX + 10}px`);
+      })
+      .on("mouseout", (event) => {
+        d3.select(event.target)
+          .attr("fill", d3.select(event.target).attr("data-original-color")); // Restaurar color
+        categoryTooltip.style("visibility", "hidden");
+      });
+
   }
 
-  function handleMouseOver(event, d) {
-    d3.select(event.target)
-      .transition()
-      .duration(200)
-      .attr("fill", "orange");
+  function createPieChart() {
+    const svg = d3.select(pieSvgElement);
+    const width = 400;
+    const height = 400;
+    const radius = Math.min(width, height) / 2;
+
+    svg.selectAll("*").remove();
+    
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
+    const pie = d3.pie().value(d => d.cantidad);
+    const arc = d3.arc().innerRadius(0).outerRadius(radius);
+
+    const g = svg.append("g").attr("transform", `translate(${width / 2}, ${height / 2})`);
+
+    const arcs = g.selectAll(".arc")
+      .data(pie(pieChartData))
+      .enter()
+      .append("g")
+      .attr("class", "arc");
+
+    const pieTooltip = d3.select(".graphics-container")
+      .append("div")
+      .style("position", "absolute")
+      .style("background", "white")
+      .style("padding", "5px")
+      .style("border", "1px solid #aaa") // Borde gris para mejorar visibilidad
+      .style("border-radius", "5px")
+      .style("color", "black") // Asegurar que el texto sea negro
+      .style("visibility", "hidden");
+
+    arcs.append("path")
+      .attr("d", arc)
+      .attr("fill", d => color(d.data.categoria))
+      .on("mouseover", (event, d) => {
+        pieTooltip.style("visibility", "visible")
+          .text(`${d.data.categoria}: ${d.data.cantidad} productos`);
+      })
+      .on("mousemove", (event) => {
+        pieTooltip.style("top", `${event.pageY - 10}px`)
+          .style("left", `${event.pageX + 10}px`);
+      })
+      .on("mouseout", () => {
+        pieTooltip.style("visibility", "hidden");
+      });
+
+    arcs.append("text")
+      .attr("transform", d => `translate(${arc.centroid(d)})`)
+      .attr("dy", "0.35em")
+      .style("text-anchor", "middle")
+      .text(d => d.data.categoria);
   }
 
-  function handleMouseOut(event, d) {
-    d3.select(event.target)
-      .transition()
-      .duration(200)
-      .attr("fill", "steelblue");
-  }
 </script>
 
 <div class="graphics-container">
-  <h2>Gráficos de {currentModule}</h2>
+  <h2>Gráficos de {currentModule} semestrales</h2>
   <svg bind:this={svgElement} width="600" height="400"></svg>
 </div>
 
@@ -186,7 +321,10 @@
   <h2>Ingresos y Gastos por Categoría</h2>
   <svg bind:this={categorySvgElement} width="600" height="400"></svg>
 </div>
-
+<div class="graphics-container">
+  <h2>Distribución de Productos por Categoría</h2>
+  <svg bind:this={pieSvgElement} width="400" height="400"></svg>
+</div>
 <style>
   .graphics-container {
     padding: 20px;
