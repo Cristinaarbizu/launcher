@@ -2,19 +2,21 @@
     "transacciones": [
         { "id": 1, "tipo": "Ingreso", "importe": 15000, "fecha": "2025-03-06", "categoria": "Ventas" },
         { "id": 2, "tipo": "Gasto", "importe": 5000, "fecha": "2025-03-05", "categoria": "Operaciones Generales" },
-        { "id": 3, "tipo": "Ingreso", "importe": 9000, "fecha": "2025-03-04", "categoria": "Consultoría y Servicios" },
+        { "id": 3, "tipo": "Ingreso", "importe": 4000, "fecha": "2025-03-04", "categoria": "Consultoría y Servicios" },
         { "id": 4, "tipo": "Gasto", "importe": 3500, "fecha": "2025-03-03", "categoria": "Operaciones Generales" },
         { "id": 5, "tipo": "Ingreso", "importe": 12000, "fecha": "2025-03-02", "categoria": "Inversiones" },
         { "id": 6, "tipo": "Gasto", "importe": 4000, "fecha": "2025-03-01", "categoria": "Marketing y Publicidad" },
-        { "id": 7, "tipo": "Ingreso", "importe": 20000, "fecha": "2025-02-28", "categoria": "Ventas" },
+        { "id": 7, "tipo": "Ingreso", "importe": 20000, "fecha": "2025-02-28", "categoria": "Operaciones Generales" },
         { "id": 8, "tipo": "Gasto", "importe": 6000, "fecha": "2025-02-27", "categoria": "Marketing y Publicidad" },
-        { "id": 9, "tipo": "Ingreso", "importe": 8500, "fecha": "2025-02-26", "categoria": "Consultoría y Servicios" },
+        { "id": 9, "tipo": "Ingreso", "importe": 5500, "fecha": "2025-02-26", "categoria": "Consultoría y Servicios" },
         { "id": 10, "tipo": "Gasto", "importe": 4500, "fecha": "2025-02-25", "categoria": "Viajes" },
         { "id": 11, "tipo": "Ingreso", "importe": 14000, "fecha": "2025-02-24", "categoria": "Ventas" },
         { "id": 12, "tipo": "Gasto", "importe": 3200, "fecha": "2025-02-23", "categoria": "Operaciones Generales" },
         { "id": 13, "tipo": "Ingreso", "importe": 11000, "fecha": "2025-02-22", "categoria": "Consultoría y Servicios" },
         { "id": 14, "tipo": "Gasto", "importe": 5000, "fecha": "2025-02-21", "categoria": "Marketing y Publicidad" },
-        { "id": 15, "tipo": "Ingreso", "importe": 10000, "fecha": "2025-02-20", "categoria": "Inversiones" },
-        { "id": 16, "tipo": "Gasto", "importe": 2500, "fecha": "2025-02-19", "categoria": "Viajes" }
+        { "id": 15, "tipo": "Ingreso", "importe": 7000, "fecha": "2025-02-20", "categoria": "Inversiones" },
+        { "id": 16, "tipo": "Ingreso", "importe": 6500, "fecha": "2025-01-19", "categoria": "Operaciones Generales" },
+        { "id": 17, "tipo": "Gasto", "importe": 6500, "fecha": "2025-02-19", "categoria": "Consultoría y Servicios" },
+        { "id": 18, "tipo": "Gasto", "importe": 2500, "fecha": "2025-02-19", "categoria": "Inversiones" }
     ]
 }
