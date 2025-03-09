@@ -146,6 +146,7 @@
       .style("padding", "5px")
       .style("border", "1px solid black")
       .style("border-radius", "5px")
+      .style("font-size", "12px")
       .style("visibility", "hidden");
 
     svg
@@ -161,7 +162,10 @@
       .attr("data-original-color", "steelblue") // Guardar color original
       .on("mouseover", (event, d) => {
         d3.select(event.target).attr("fill", "orange"); // Cambiar color al pasar el mouse
-        tooltip.style("visibility", "visible").text(`Valor: ${d.valor}`);
+        tooltip
+          .style("visibility", "visible")
+          .style("color", "black") // Añadir el color de texto
+          .text(`Valor: $${d.valor}`);
       })
       .on("mousemove", (event) => {
         tooltip
@@ -243,6 +247,8 @@
       .style("padding", "5px")
       .style("border", "1px solid black")
       .style("border-radius", "5px")
+      .style("font-size", "12px")
+      .style("color", "black")
       .style("visibility", "hidden");
 
     svg
@@ -261,7 +267,9 @@
         d3.select(event.target).attr("fill", "limegreen"); // Cambio de color al pasar el mouse
         categoryTooltip
           .style("visibility", "visible")
-          .text(`Ingreso: ${d.ingreso}€`);
+          .style("color", "black")
+          .text(`Ingreso: $${d.ingreso}`);
+
       })
       .on("mousemove", (event) => {
         categoryTooltip
@@ -292,8 +300,10 @@
         d3.select(event.target).attr("fill", "darkred"); // Cambio de color al pasar el mouse
         categoryTooltip
           .style("visibility", "visible")
-          .text(`Gasto: ${d.gasto}€`);
+          .style("color", "black") 
+          .text(`Gasto: $${d.gasto}`);
       })
+      
       .on("mousemove", (event) => {
         categoryTooltip
           .style("top", `${event.pageY - 10}px`)
@@ -306,11 +316,35 @@
         ); // Restaurar color
         categoryTooltip.style("visibility", "hidden");
       });
+
+          svg
+      .selectAll(".text-ingreso")
+      .data(categoryData)
+      .enter()
+      .append("text")
+      .attr("class", "text-ingreso")
+      .attr("x", (d) => x(d.categoria) + barWidth / 2)
+      .attr("y", (d) => y(d.ingreso) - 5)
+      .attr("text-anchor", "middle")
+      .attr("font-size", "10px")
+      .text("Ingreso");
+
+    svg
+      .selectAll(".text-gasto")
+      .data(categoryData)
+      .enter()
+      .append("text")
+      .attr("class", "text-gasto")
+      .attr("x", (d) => x(d.categoria) + barWidth + barWidth / 2)
+      .attr("y", (d) => y(d.gasto) - 5)
+      .attr("text-anchor", "middle")
+      .attr("font-size", "10px")
+      .text("Gasto");
   }
 
   function createPieChart() {
     const svg = d3.select(pieSvgElement);
-    const width = 400;
+    const width = 600;
     const height = 400;
     const radius = Math.min(width, height) / 2;
 
@@ -339,6 +373,7 @@
       .style("padding", "5px")
       .style("border", "1px solid black")
       .style("border-radius", "5px")
+      .style("font-size", "12px")
       .style("visibility", "hidden");
 
     arcs
@@ -348,6 +383,7 @@
       .on("mouseover", (event, d) => {
         pieTooltip
           .style("visibility", "visible")
+          .style("color", "black")
           .text(`${d.data.categoria}: ${d.data.cantidad} productos`);
       })
       .on("mousemove", (event) => {
@@ -408,6 +444,7 @@
       .style("padding", "5px")
       .style("border", "1px solid black")
       .style("border-radius", "5px")
+      .style("font-size", "12px")
       .style("visibility", "hidden");
 
     const x0 = d3
@@ -458,7 +495,8 @@
         d3.select(event.target).attr("fill", "orange"); // Cambio de color al pasar el mouse
         billingTooltip
           .style("visibility", "visible")
-          .text(`${d.estado}: ${d.valor}€`);
+          .style("color", "black") 
+          .text(`${d.estado}: $${d.valor}`);
       })
       .on("mousemove", (event) => {
         billingTooltip
@@ -472,6 +510,16 @@
         ); // Restaurar color
         billingTooltip.style("visibility", "hidden");
       });
+
+      groups.selectAll("text")
+      .data(d => d[1])
+      .enter()
+      .append("text")
+      .attr("x", d => x1(d.estado) + x1.bandwidth() / 2)
+      .attr("y", d => y(d.valor) - 5)
+      .attr("text-anchor", "middle")
+      .attr("font-size", "10px")
+      .text(d => d.estado);
 
     svgBilling
       .append("g")
@@ -495,7 +543,7 @@
 </div>
 <div class="graphics-container">
   <h2>Distribución de Productos por Categoría</h2>
-  <svg bind:this={pieSvgElement} width="400" height="400"></svg>
+  <svg bind:this={pieSvgElement} width="600" height="400"></svg>
 </div>
 <div class="graphics-container">
   <h2>Facturación</h2>
