@@ -65,6 +65,7 @@
     padding: 0.5em 1em;
     border-radius: 4px;
     transition: background-color 0.3s;
+    margin: 0 2px;
   }
 
   .light button:hover {
