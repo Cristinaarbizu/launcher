@@ -103,4 +103,25 @@
       text-align: right;
   }
   
+  /* Estilos de colores para los estados */
+  .estado-pagada {
+    color: green;
+  }
+
+  .estado-pendiente {
+    color: orange;
+  }
+
+  .estado-vencida {
+    color: red;
+  }
+
+  .estado-en-progreso {
+    color: blue; /* Color para el nuevo estado "En progreso" */
+  }
+  
+  .alinear-dcha {
+    text-align: right;
+  }
+  
 </style>
